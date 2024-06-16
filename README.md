@@ -6,3 +6,14 @@
 ![stability-stable](https://img.shields.io/badge/stability-stable-green.svg)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/childmindresearch/styxdocker/blob/main/LICENSE)
 [![pages](https://img.shields.io/badge/api-docs-blue)](https://childmindresearch.github.io/styxdocker)
+
+## Usage
+
+```Python
+from styxdefs import set_global_runner
+from styxdocker import DockerRunner
+
+set_global_runner(DockerRunner())
+
+# Now you can use any Styx functions as usual
+```
