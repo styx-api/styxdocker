@@ -21,7 +21,10 @@
 
             <h2>Contents</h2>
             <ul>
-  <li><a href="#docker-runner-for-styx-compiled-wrappers">Docker Runner for Styx compiled wrappers</a></li>
+  <li><a href="#docker-runner-for-styx-compiled-wrappers">Docker Runner for Styx compiled wrappers</a>
+  <ul>
+    <li><a href="#usage">Usage</a></li>
+  </ul></li>
 </ul>
 
 
@@ -88,6 +91,18 @@ styxdocker    </h1>
 <img src="https://img.shields.io/badge/stability-stable-green.svg" alt="stability-stable" />
 <a href="https://github.com/childmindresearch/styxdocker/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License" /></a>
 <a href="https://childmindresearch.github.io/styxdocker"><img src="https://img.shields.io/badge/api-docs-blue" alt="pages" /></a></p>
+
+<h2 id="usage">Usage</h2>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">styxdefs</span> <span class="kn">import</span> <span class="n">set_global_runner</span>
+<span class="kn">from</span> <span class="nn">styxdocker</span> <span class="kn">import</span> <span class="n">DockerRunner</span>
+
+<span class="n">set_global_runner</span><span class="p">(</span><span class="n">DockerRunner</span><span class="p">())</span>
+
+<span class="c1"># Now you can use any Styx functions as usual</span>
+</code></pre>
+</div>
 </div>
 
                         <input id="mod-styxdocker-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
