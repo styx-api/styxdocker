@@ -113,10 +113,6 @@ class _DockerExecution(Execution):
         )
 
         docker_extra_args: list[str] = []
-        container = self.metadata.container_image_tag
-
-        if container is None:
-            raise ValueError("No container image tag specified in metadata")
 
         docker_command = [
             self.docker_executable,
@@ -128,7 +124,7 @@ class _DockerExecution(Execution):
             "--entrypoint",
             "/bin/bash",
             *docker_extra_args,
-            container,
+            self.container_tag,
             "./run.sh",
         ]
 
