@@ -58,6 +58,7 @@ class _DockerExecution(Execution):
         output_dir: pathlib.Path,
         metadata: Metadata,
         container_tag: str,
+        docker_user_id: str | None,
         docker_executable: str,
     ) -> None:
         """Create DockerExecution."""
@@ -69,6 +70,7 @@ class _DockerExecution(Execution):
         self.output_dir = output_dir
         self.metadata = metadata
         self.container_tag = container_tag
+        self.docker_user_id = docker_user_id
         self.docker_executable = docker_executable
 
     def input_file(self, host_file: InputPathType) -> str:
@@ -118,6 +120,7 @@ class _DockerExecution(Execution):
             self.docker_executable,
             "run",
             "--rm",
+            *(["-u", self.docker_user_id] if self.docker_user_id else []),
             "-w",
             "/styx_output",
             *mounts,
@@ -165,12 +168,16 @@ class DockerRunner(Runner):
         self,
         image_overrides: dict[str, str] | None = None,
         docker_executable: str = "docker",
+        user_id: int | None = None,
         data_dir: InputPathType | None = None,
     ) -> None:
         """Create a new DockerRunner."""
         self.data_dir = pathlib.Path(data_dir or "styx_tmp")
         self.uid = os.urandom(8).hex()
         self.execution_counter = 0
+        self.user_id = (
+            user_id if user_id else (os.getuid() if os.name == "posix" else None)
+        )
         self.docker_executable = docker_executable
         self.image_overrides = image_overrides or {}
 
@@ -198,5 +205,6 @@ class DockerRunner(Runner):
             / f"{self.uid}_{self.execution_counter - 1}_{metadata.name}",
             metadata=metadata,
             container_tag=container_tag,
+            docker_user_id=f"{self.user_id}",
             docker_executable=self.docker_executable,
         )
