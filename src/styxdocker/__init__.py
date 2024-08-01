@@ -12,7 +12,14 @@ from datetime import datetime
 from functools import partial
 from subprocess import PIPE, Popen
 
-from styxdefs import Execution, InputPathType, Metadata, OutputPathType, Runner
+from styxdefs import (
+    Execution,
+    InputPathType,
+    Metadata,
+    OutputPathType,
+    Runner,
+    StyxRuntimeError,
+)
 
 
 def _docker_mount(host_path: str, container_path: str, readonly: bool) -> str:
@@ -25,28 +32,23 @@ def _docker_mount(host_path: str, container_path: str, readonly: bool) -> str:
     return f"type=bind,source={host_path},target={container_path}{readonly_str}"
 
 
-class StyxDockerError(Exception):
-    """Styx Docker error."""
+class StyxDockerError(StyxRuntimeError):
+    """Styx Docker runtime error."""
 
     def __init__(
         self,
         return_code: int | None = None,
-        docker_args: list[str] | None = None,
         command_args: list[str] | None = None,
+        docker_args: list[str] | None = None,
     ) -> None:
         """Create StyxDockerError."""
-        message = "Command failed."
-
-        if return_code is not None:
-            message += f"\n- Return code: {return_code}"
-
-        if docker_args is not None:
-            message += f"\n- Docker args: {shlex.join(docker_args)}"
-
-        if command_args is not None:
-            message += f"\n- Command args: {shlex.join(command_args)}"
-
-        super().__init__(message)
+        super().__init__(
+            return_code=return_code,
+            command_args=docker_args,
+            message_extra=f"\n- Command args: {shlex.join(command_args)}"
+            if command_args
+            else None,
+        )
 
 
 class _DockerExecution(Execution):
@@ -147,7 +149,7 @@ class _DockerExecution(Execution):
         time_end = datetime.now()
         self.logger.info(f"Executed {self.metadata.name} in {time_end - time_start}")
         if return_code:
-            raise StyxDockerError(return_code, docker_command, cargs)
+            raise StyxDockerError(return_code, cargs, docker_command)
 
 
 def _default_execution_output_dir(metadata: Metadata) -> pl.Path:
