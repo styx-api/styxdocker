@@ -2,7 +2,6 @@
 
 import logging
 import os
-import pathlib
 import pathlib as pl
 import re
 import shlex
@@ -20,6 +19,11 @@ from styxdefs import (
     Runner,
     StyxRuntimeError,
 )
+
+if os.name == "posix":
+    _HOST_UID = os.getuid()  # type: ignore
+else:
+    _HOST_UID = None
 
 
 def _docker_mount(host_path: str, container_path: str, readonly: bool) -> str:
@@ -44,9 +48,9 @@ class StyxDockerError(StyxRuntimeError):
         """Create StyxDockerError."""
         super().__init__(
             return_code=return_code,
-            command_args=docker_args,
-            message_extra=f"\n- Command args: {shlex.join(command_args)}"
-            if command_args
+            command_args=command_args,
+            message_extra=f"- Docker args: {shlex.join(docker_args)}"
+            if docker_args
             else None,
         )
 
@@ -57,7 +61,7 @@ class _DockerExecution(Execution):
     def __init__(
         self,
         logger: logging.Logger,
-        output_dir: pathlib.Path,
+        output_dir: pl.Path,
         metadata: Metadata,
         container_tag: str,
         docker_user_id: str | None,
@@ -174,12 +178,10 @@ class DockerRunner(Runner):
         data_dir: InputPathType | None = None,
     ) -> None:
         """Create a new DockerRunner."""
-        self.data_dir = pathlib.Path(data_dir or "styx_tmp")
+        self.data_dir = pl.Path(data_dir or "styx_tmp")
         self.uid = os.urandom(8).hex()
         self.execution_counter = 0
-        self.user_id = (
-            user_id if user_id else (os.getuid() if os.name == "posix" else None)
-        )
+        self.user_id = user_id if user_id else _HOST_UID
         self.docker_executable = docker_executable
         self.image_overrides = image_overrides or {}
 
