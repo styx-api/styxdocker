@@ -5,15 +5,12 @@ import os
 import pathlib as pl
 import re
 import shlex
-import threading
-import time
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from functools import partial
 from subprocess import PIPE, Popen
 
-import psutil
 from styxdefs import (
     Execution,
     InputPathType,
