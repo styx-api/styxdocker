@@ -23,7 +23,7 @@ from styxdefs import (
 if os.name == "posix":
     _HOST_UID: int | None = os.getuid()  # type: ignore
 else:
-    _HOST_UID: int | None = None
+    _HOST_UID = None
 
 
 def _docker_mount(host_path: str, container_path: str, readonly: bool) -> str:
