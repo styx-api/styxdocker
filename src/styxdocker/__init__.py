@@ -5,12 +5,15 @@ import os
 import pathlib as pl
 import re
 import shlex
+import threading
+import time
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from functools import partial
 from subprocess import PIPE, Popen
 
+import psutil
 from styxdefs import (
     Execution,
     InputPathType,
@@ -64,7 +67,7 @@ class _DockerExecution(Execution):
         output_dir: pl.Path,
         metadata: Metadata,
         container_tag: str,
-        docker_user_id: str | None,
+        docker_user_id: int | None,
         docker_executable: str,
     ) -> None:
         """Create DockerExecution."""
@@ -126,7 +129,7 @@ class _DockerExecution(Execution):
             self.docker_executable,
             "run",
             "--rm",
-            *(["-u", self.docker_user_id] if self.docker_user_id else []),
+            *(["-u", str(self.docker_user_id)] if self.docker_user_id else []),
             "-w",
             "/styx_output",
             *mounts,
@@ -209,6 +212,6 @@ class DockerRunner(Runner):
             / f"{self.uid}_{self.execution_counter - 1}_{metadata.name}",
             metadata=metadata,
             container_tag=container_tag,
-            docker_user_id=f"{self.user_id}",
+            docker_user_id=self.user_id,
             docker_executable=self.docker_executable,
         )
