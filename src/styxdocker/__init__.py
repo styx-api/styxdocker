@@ -66,6 +66,7 @@ class _DockerExecution(Execution):
         container_tag: str,
         docker_user_id: int | None,
         docker_executable: str,
+        environ: dict[str, str],
     ) -> None:
         """Create DockerExecution."""
         self.logger: logging.Logger = logger
@@ -78,6 +79,7 @@ class _DockerExecution(Execution):
         self.container_tag = container_tag
         self.docker_user_id = docker_user_id
         self.docker_executable = docker_executable
+        self.environ = environ
 
     def input_file(self, host_file: InputPathType) -> str:
         """Resolve input file."""
@@ -120,7 +122,9 @@ class _DockerExecution(Execution):
             )
         )
 
-        docker_extra_args: list[str] = []
+        environ_arg_args = [
+            *(["--env", f"{key}={value}"] for key, value in self.environ.items())
+        ]
 
         docker_command = [
             self.docker_executable,
@@ -132,7 +136,7 @@ class _DockerExecution(Execution):
             *mounts,
             "--entrypoint",
             "/bin/bash",
-            *docker_extra_args,
+            *environ_arg_args,
             self.container_tag,
             "./run.sh",
         ]
@@ -176,6 +180,7 @@ class DockerRunner(Runner):
         docker_executable: str = "docker",
         user_id: int | None = None,
         data_dir: InputPathType | None = None,
+        environ: dict[str, str] | None = None,
     ) -> None:
         """Create a new DockerRunner."""
         self.data_dir = pl.Path(data_dir or "styx_tmp")
@@ -184,6 +189,7 @@ class DockerRunner(Runner):
         self.user_id = user_id if user_id else _HOST_UID
         self.docker_executable = docker_executable
         self.image_overrides = image_overrides or {}
+        self.environ = environ or {}
 
         # Configure logger
         self.logger = logging.getLogger(self.logger_name)
@@ -211,4 +217,5 @@ class DockerRunner(Runner):
             container_tag=container_tag,
             docker_user_id=self.user_id,
             docker_executable=self.docker_executable,
+            environ=self.environ,
         )
