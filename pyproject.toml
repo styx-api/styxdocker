@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "styxdocker"
 version = "0.1.0"
-description = "A beautiful description."
+description = "Docker integration for Styx compiled wrappers."
 authors = ["Florian Rupprecht <33600480+nx10@users.noreply.github.com>"]
 license = "MIT License"
 readme = "README.md"
