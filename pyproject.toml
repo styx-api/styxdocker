@@ -10,7 +10,6 @@ packages = [{include = "styxdocker", from = "src"}]
 [tool.poetry.dependencies]
 python = ">=3.10"
 styxdefs = "^0.2.0"
-psutil = "^6.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.1"
