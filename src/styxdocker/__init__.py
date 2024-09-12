@@ -3,7 +3,6 @@
 import logging
 import os
 import pathlib as pl
-import re
 import shlex
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor
@@ -131,11 +130,11 @@ class _DockerExecution(Execution):
             )
         )
 
-        environ_arg_args = [
-            *(["--env", f"{key}={value}"] for key, value in self.environ.items())
+        environ_arg_args: list[str] = [
+            *(["--env", f"{key}={value}"] for key, value in self.environ.items())  # type: ignore
         ]
 
-        docker_command = [
+        docker_command: list[str] = [
             self.docker_executable,
             "run",
             "--rm",
@@ -170,12 +169,6 @@ class _DockerExecution(Execution):
         self.logger.info(f"Executed {self.metadata.name} in {time_end - time_start}")
         if return_code:
             raise StyxDockerError(return_code, cargs, docker_command)
-
-
-def _default_execution_output_dir(metadata: Metadata) -> pl.Path:
-    """Default output dir generator."""
-    filesafe_name = re.sub(r"\W+", "_", metadata.name)
-    return pl.Path(f"output_{filesafe_name}")
 
 
 class DockerRunner(Runner):
