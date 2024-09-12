@@ -23,7 +23,17 @@
             <ul>
   <li><a href="#docker-runner-for-styx-compiled-wrappers">Docker Runner for Styx compiled wrappers</a>
   <ul>
+    <li><a href="#installation">Installation</a></li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#advanced-configuration">Advanced Configuration</a></li>
+    <li><a href="#error-handling">Error Handling</a></li>
+    <li><a href="#cross-platform-support">Cross-Platform Support</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#documentation">Documentation</a></li>
+    <li><a href="#support">Support</a></li>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#comparison-with-styxsingularityhttpsgithubcomchildmindresearchstyxsingularity">Comparison with <a href="https://github.com/childmindresearch/styxsingularity"><code>styxsingularity</code></a></a></li>
   </ul></li>
 </ul>
 
@@ -104,17 +114,102 @@ styxdocker    </h1>
 <a href="https://github.com/childmindresearch/styxdocker/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License" /></a>
 <a href="https://childmindresearch.github.io/styxdocker"><img src="https://img.shields.io/badge/api-docs-blue" alt="pages" /></a></p>
 
+<p><code><a href="">styxdocker</a></code> is a Python package that provides Docker integration for Styx compiled wrappers. It allows you to run Styx functions within Docker containers, offering improved isolation and reproducibility for your workflows.</p>
+
+<h2 id="installation">Installation</h2>
+
+<p>You can install styxdocker using pip:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>styxdocker
+</code></pre>
+</div>
+
 <h2 id="usage">Usage</h2>
+
+<p>Here's a basic example of how to use styxdocker:</p>
 
 <div class="pdoc-code codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">styxdefs</span> <span class="kn">import</span> <span class="n">set_global_runner</span>
 <span class="kn">from</span> <span class="nn">styxdocker</span> <span class="kn">import</span> <span class="n">DockerRunner</span>
 
-<span class="n">set_global_runner</span><span class="p">(</span><span class="n">DockerRunner</span><span class="p">())</span>
+<span class="c1"># Initialize the DockerRunner</span>
+<span class="n">runner</span> <span class="o">=</span> <span class="n">DockerRunner</span><span class="p">()</span>
 
-<span class="c1"># Now you can use any Styx functions as usual</span>
+<span class="c1"># Set the global runner for Styx</span>
+<span class="n">set_global_runner</span><span class="p">(</span><span class="n">runner</span><span class="p">)</span>
+
+<span class="c1"># Now you can use any Styx functions as usual, and they will run in Docker containers</span>
 </code></pre>
 </div>
+
+<h2 id="advanced-configuration">Advanced Configuration</h2>
+
+<p>The DockerRunner class accepts several parameters for advanced configuration:</p>
+
+<ul>
+<li><code>image_overrides</code>: A dictionary to override container image tags</li>
+<li><code>docker_executable</code>: Path to the Docker executable (default: "docker")</li>
+<li><code>user_id</code>: User ID to run the container as (default: current user ID on POSIX systems)</li>
+<li><code>data_dir</code>: Directory for temporary data storage</li>
+<li><code>environ</code>: Environment variables to set in the container</li>
+</ul>
+
+<p>Example:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="n">runner</span> <span class="o">=</span> <span class="n">DockerRunner</span><span class="p">(</span>
+    <span class="n">image_overrides</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;python:3.9&quot;</span><span class="p">:</span> <span class="s2">&quot;my-custom-python:3.9&quot;</span><span class="p">},</span>
+    <span class="n">docker_executable</span><span class="o">=</span><span class="s2">&quot;/usr/local/bin/docker&quot;</span><span class="p">,</span>
+    <span class="n">user_id</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">data_dir</span><span class="o">=</span><span class="s2">&quot;/tmp/styx_data&quot;</span><span class="p">,</span>
+    <span class="n">environ</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;PYTHONPATH&quot;</span><span class="p">:</span> <span class="s2">&quot;/app/lib&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+</code></pre>
+</div>
+
+<h2 id="error-handling">Error Handling</h2>
+
+<p><code><a href="">styxdocker</a></code> provides a custom error class, <code><a href="#StyxDockerError">StyxDockerError</a></code>, which is raised when a Docker execution fails. This error includes details about the return code, command arguments, and Docker arguments for easier debugging.</p>
+
+<h2 id="cross-platform-support">Cross-Platform Support</h2>
+
+<p><code><a href="">styxdocker</a></code> is designed to work on Linux, macOS, and Windows. On POSIX systems (Linux and macOS), it automatically uses the current user's ID for running containers, ensuring proper file permissions. On Windows, this feature is not available, but the package remains functional.</p>
+
+<h2 id="contributing">Contributing</h2>
+
+<p>Contributions to styxdocker are welcome! Please refer to the <a href="https://github.com/childmindresearch/styxdocker">GitHub repository</a> for information on how to contribute, report issues, or submit pull requests.</p>
+
+<h2 id="license">License</h2>
+
+<p>styxdocker is released under the MIT License. See the LICENSE file for details.</p>
+
+<h2 id="documentation">Documentation</h2>
+
+<p>For detailed API documentation, please visit our <a href="https://childmindresearch.github.io/styxdocker">API Docs</a>.</p>
+
+<h2 id="support">Support</h2>
+
+<p>If you encounter any issues or have questions, please open an issue on the <a href="https://github.com/childmindresearch/styxdocker">GitHub repository</a>.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<ul>
+<li>Python 3.10+</li>
+<li>Docker installed and running on your system</li>
+</ul>
+
+<h2 id="comparison-with-styxsingularityhttpsgithubcomchildmindresearchstyxsingularity">Comparison with <a href="https://github.com/childmindresearch/styxsingularity"><code>styxsingularity</code></a></h2>
+
+<p>While <a href="https://github.com/childmindresearch/styxdocker"><code>styxdocker</code></a> and <a href="https://github.com/childmindresearch/styxsingularity"><code>styxsingularity</code></a> serve similar purposes, they have some key differences:</p>
+
+<ul>
+<li>Container Technology: <code><a href="">styxdocker</a></code> uses Docker, while styxsingularity uses Singularity/Apptainer.</li>
+<li>Platform Support: <code><a href="">styxdocker</a></code> works on Windows, Linux, and macOS, whereas styxsingularity is not supported on Windows.</li>
+<li>User Permissions: <code><a href="">styxdocker</a></code> can run containers as the current user on POSIX systems, which can help with file permission issues.</li>
+</ul>
+
+<p>Choose the package that best fits your infrastructure and requirements.</p>
 </div>
 
                         <input id="mod-styxdocker-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
