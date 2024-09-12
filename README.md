@@ -10,7 +10,7 @@
 `styxdocker` is a Python package that provides Docker integration for Styx compiled wrappers. It allows you to run Styx functions within Docker containers, offering improved isolation and reproducibility for your workflows.
 
 ## Installation
-You can install styxdocker using pip:
+You can install `styxdocker` using pip:
 
 ```bash
 pip install styxdocker
@@ -34,7 +34,7 @@ set_global_runner(runner)
 ```
 
 ## Advanced Configuration
-The DockerRunner class accepts several parameters for advanced configuration:
+The `DockerRunner` class accepts several parameters for advanced configuration:
 
 - `image_overrides`: A dictionary to override container image tags
 - `docker_executable`: Path to the Docker executable (default: "docker")
@@ -63,11 +63,11 @@ runner = DockerRunner(
 
 ## Contributing
 
-Contributions to styxdocker are welcome! Please refer to the [GitHub repository](https://github.com/childmindresearch/styxdocker) for information on how to contribute, report issues, or submit pull requests.
+Contributions to `styxdocker` are welcome! Please refer to the [GitHub repository](https://github.com/childmindresearch/styxdocker) for information on how to contribute, report issues, or submit pull requests.
 
 ## License
 
-styxdocker is released under the MIT License. See the LICENSE file for details.
+`styxdocker` is released under the MIT License. See the LICENSE file for details.
 
 ## Documentation
 
