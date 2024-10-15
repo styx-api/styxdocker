@@ -69,7 +69,7 @@ class _DockerExecution(Execution):
     ) -> None:
         """Create DockerExecution."""
         self.logger: logging.Logger = logger
-        self.input_mounts: list[tuple[pl.Path, str]] = []
+        self.input_mounts: list[tuple[pl.Path, str, bool]] = []
         self.input_file_next_id = 0
         self.output_dir = output_dir
         self.metadata = metadata
@@ -78,7 +78,12 @@ class _DockerExecution(Execution):
         self.docker_executable = docker_executable
         self.environ = environ
 
-    def input_file(self, host_file: InputPathType, resolve_parent: bool = False) -> str:
+    def input_file(
+        self,
+        host_file: InputPathType,
+        resolve_parent: bool = False,
+        mutable: bool = False,
+    ) -> str:
         """Resolve input file."""
         _host_file = pl.Path(host_file)
 
@@ -87,12 +92,12 @@ class _DockerExecution(Execution):
                 f"/styx_input/{self.input_file_next_id}/{_host_file.parent.name}"
             )
             resolved_file = f"{local_file}/{_host_file.name}"
-            self.input_mounts.append((_host_file.parent, local_file))
+            self.input_mounts.append((_host_file.parent, local_file, mutable))
         else:
             resolved_file = local_file = (
                 f"/styx_input/{self.input_file_next_id}/{_host_file.name}"
             )
-            self.input_mounts.append((_host_file, local_file))
+            self.input_mounts.append((_host_file, local_file, mutable))
 
         self.input_file_next_id += 1
         return resolved_file
@@ -105,11 +110,11 @@ class _DockerExecution(Execution):
         """Execute."""
         mounts: list[str] = []
 
-        for host_file, local_file in self.input_mounts:
+        for host_file, local_file, mutable in self.input_mounts:
             mounts.append("--mount")
             mounts.append(
                 _docker_mount(
-                    host_file.absolute().as_posix(), local_file, readonly=True
+                    host_file.absolute().as_posix(), local_file, readonly=not mutable
                 )
             )
 
