@@ -64,8 +64,9 @@ class _DockerExecution(Execution):
         output_dir: pl.Path,
         metadata: Metadata,
         container_tag: str,
-        docker_user_id: int | None,
         docker_executable: str,
+        docker_extra_args: list[str],
+        docker_user_id: int | None,
         environ: dict[str, str],
     ) -> None:
         """Create DockerExecution."""
@@ -75,8 +76,9 @@ class _DockerExecution(Execution):
         self.output_dir = output_dir
         self.metadata = metadata
         self.container_tag = container_tag
-        self.docker_user_id = docker_user_id
         self.docker_executable = docker_executable
+        self.docker_extra_args = docker_extra_args
+        self.docker_user_id = docker_user_id
         self.environ = environ
 
     def input_file(
@@ -106,6 +108,10 @@ class _DockerExecution(Execution):
     def output_file(self, local_file: str, optional: bool = False) -> OutputPathType:
         """Resolve output file."""
         return self.output_dir / local_file
+
+    def params(self, params: dict) -> dict:
+        """No changes to params."""
+        return params
 
     def run(
         self,
@@ -148,6 +154,7 @@ class _DockerExecution(Execution):
         docker_command: list[str] = [
             self.docker_executable,
             "run",
+            *self.docker_extra_args,
             "--rm",
             *(["-u", str(self.docker_user_id)] if self.docker_user_id else []),
             "-w",
@@ -178,7 +185,10 @@ class _DockerExecution(Execution):
                 exhaust(_stderr_handler(line[:-1]) for line in process.stderr)  # type: ignore
         return_code = process.poll()
         time_end = datetime.now()
-        self.logger.info(f"Executed {self.metadata.name} in {time_end - time_start}")
+        self.logger.info(
+            f"Executed {self.metadata.package} {self.metadata.name} "
+            f"in {time_end - time_start}"
+        )
         if return_code:
             raise StyxDockerError(return_code, cargs, docker_command)
 
@@ -192,7 +202,8 @@ class DockerRunner(Runner):
         self,
         image_overrides: dict[str, str] | None = None,
         docker_executable: str = "docker",
-        user_id: int | None = None,
+        docker_extra_args: list[str] | None = None,
+        docker_user_id: int | None = None,
         data_dir: InputPathType | None = None,
         environ: dict[str, str] | None = None,
     ) -> None:
@@ -200,8 +211,9 @@ class DockerRunner(Runner):
         self.data_dir = pl.Path(data_dir or "styx_tmp")
         self.uid = os.urandom(8).hex()
         self.execution_counter = 0
-        self.user_id = user_id if user_id else _HOST_UID
         self.docker_executable = docker_executable
+        self.docker_extra_args = docker_extra_args or []
+        self.docker_user_id = docker_user_id if docker_user_id else _HOST_UID
         self.image_overrides = image_overrides or {}
         self.environ = environ or {}
 
@@ -229,7 +241,8 @@ class DockerRunner(Runner):
             / f"{self.uid}_{self.execution_counter - 1}_{metadata.name}",
             metadata=metadata,
             container_tag=container_tag,
-            docker_user_id=self.user_id,
+            docker_user_id=self.docker_user_id,
             docker_executable=self.docker_executable,
+            docker_extra_args=self.docker_extra_args,
             environ=self.environ,
         )
