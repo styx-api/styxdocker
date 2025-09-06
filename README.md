@@ -1,11 +1,11 @@
 # Docker Runner for Styx compiled wrappers
 
-[![Build](https://github.com/childmindresearch/styxdocker/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/childmindresearch/styxdocker/actions/workflows/test.yaml?query=branch%3Amain)
-[![codecov](https://codecov.io/gh/childmindresearch/styxdocker/branch/main/graph/badge.svg?token=22HWWFWPW5)](https://codecov.io/gh/childmindresearch/styxdocker)
+[![Build](https://github.com/styx-api/styxdocker/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/styx-api/styxdocker/actions/workflows/test.yaml?query=branch%3Amain)
+[![codecov](https://codecov.io/gh/styx-api/styxdocker/branch/main/graph/badge.svg?token=22HWWFWPW5)](https://codecov.io/gh/styx-api/styxdocker)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 ![stability-stable](https://img.shields.io/badge/stability-stable-green.svg)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/childmindresearch/styxdocker/blob/main/LICENSE)
-[![pages](https://img.shields.io/badge/api-docs-blue)](https://childmindresearch.github.io/styxdocker)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/styx-api/styxdocker/blob/main/LICENSE)
+[![pages](https://img.shields.io/badge/api-docs-blue)](https://styx-api.github.io/styxdocker)
 
 `styxdocker` is a Python package that provides Docker integration for Styx compiled wrappers. It allows you to run Styx functions within Docker containers, offering improved isolation and reproducibility for your workflows.
 
@@ -63,7 +63,7 @@ runner = DockerRunner(
 
 ## Contributing
 
-Contributions to `styxdocker` are welcome! Please refer to the [GitHub repository](https://github.com/childmindresearch/styxdocker) for information on how to contribute, report issues, or submit pull requests.
+Contributions to `styxdocker` are welcome! Please refer to the [GitHub repository](https://github.com/styx-api/styxdocker) for information on how to contribute, report issues, or submit pull requests.
 
 ## License
 
@@ -71,20 +71,20 @@ Contributions to `styxdocker` are welcome! Please refer to the [GitHub repositor
 
 ## Documentation
 
-For detailed API documentation, please visit our [API Docs](https://childmindresearch.github.io/styxdocker).
+For detailed API documentation, please visit our [API Docs](https://styx-api.github.io/styxdocker).
 
 ## Support
 
-If you encounter any issues or have questions, please open an issue on the [GitHub repository](https://github.com/childmindresearch/styxdocker).
+If you encounter any issues or have questions, please open an issue on the [GitHub repository](https://github.com/styx-api/styxdocker).
 
 ## Requirements
 
 - Python 3.10+
 - Docker installed and running on your system
 
-## Comparison with [`styxsingularity`](https://github.com/childmindresearch/styxsingularity)
+## Comparison with [`styxsingularity`](https://github.com/styx-api/styxsingularity)
 
-While [`styxdocker`](https://github.com/childmindresearch/styxdocker) and [`styxsingularity`](https://github.com/childmindresearch/styxsingularity) serve similar purposes, they have some key differences:
+While [`styxdocker`](https://github.com/styx-api/styxdocker) and [`styxsingularity`](https://github.com/styx-api/styxsingularity) serve similar purposes, they have some key differences:
 
 - Container Technology: `styxdocker` uses Docker, while `styxsingularity` uses Singularity/Apptainer.
 - Platform Support: `styxdocker` works on Windows, Linux, and macOS, whereas `styxsingularity` is not supported on Windows.
