@@ -16,7 +16,6 @@ jobs:
       uses: astral-sh/setup-uv@v6
       with:
         enable-cache: true
-        pyproject-file: pyproject.toml
 
     - name: Run tests
       id: run-tests
@@ -44,8 +43,7 @@ jobs:
       uses: astral-sh/setup-uv@v6
       with:
         enable-cache: true
-        pyproject-file: pyproject.toml
-        
+
     - name: Ruff format
       run: uv run ruff format --check
 
@@ -61,6 +59,5 @@ jobs:
       uses: astral-sh/setup-uv@v6
       with:
         enable-cache: true
-        pyproject-file: pyproject.toml
 
     - run: uv run mypy .

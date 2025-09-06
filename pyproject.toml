@@ -1,9 +1,9 @@
 [project]
 name = "styxdocker"
-version = "0.5.0"
+version = "0.5.1"
 description = "Docker integration for Styx compiled wrappers."
 authors = [
-  { name = "Florian Rupprecht", email = "33600480+nx10@users.noreply.github.com" },
+  {name = "Florian Rupprecht", email = "33600480+nx10@users.noreply.github.com"}
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -12,17 +12,14 @@ dependencies = ["styxdefs>=0.5.0,<0.6"]
 
 [dependency-groups]
 dev = [
-  "pytest>=8.2.1,<9",
-  "mypy>=1.11.2,<2",
-  "pre-commit>=4.0.1,<5",
-  "pytest-cov>=6.0.0,<7",
-  "ruff>=0.9.6,<0.10",
+  "pytest>=8.4.2",
+  "mypy>=1.17.1",
+  "pre-commit>=4.3.0",
+  "pytest-cov>=6.2.1",
+  "ruff>=0.12.12",
+  "deptry>=0.23.0"
 ]
-docs = ["pdoc>=15.0.0,<16"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+docs = ["pdoc>=15.0.0"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
@@ -48,3 +45,7 @@ convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = []
+
+[build-system]
+requires = ["uv_build>=0.8.13,<0.9.0"]
+build-backend = "uv_build"
