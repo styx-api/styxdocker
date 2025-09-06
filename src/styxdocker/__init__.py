@@ -156,7 +156,11 @@ class _DockerExecution(Execution):
             "run",
             *self.docker_extra_args,
             "--rm",
-            *(["-u", str(self.docker_user_id)] if self.docker_user_id else []),
+            *(
+                ["-u", str(self.docker_user_id)]
+                if self.docker_user_id is not None
+                else []
+            ),
             "-w",
             "/styx_output",
             *mounts,
@@ -213,7 +217,9 @@ class DockerRunner(Runner):
         self.execution_counter = 0
         self.docker_executable = docker_executable
         self.docker_extra_args = docker_extra_args or []
-        self.docker_user_id = docker_user_id if docker_user_id else _HOST_UID
+        self.docker_user_id = (
+            docker_user_id if docker_user_id is not None else _HOST_UID
+        )
         self.image_overrides = image_overrides or {}
         self.environ = environ or {}
 
