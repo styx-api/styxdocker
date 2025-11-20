@@ -147,9 +147,9 @@ class _DockerExecution(Execution):
             )
         )
 
-        environ_arg_args: list[str] = [
-            *(["--env", f"{key}={value}"] for key, value in self.environ.items())  # type: ignore
-        ]
+        environ_arg_args: list[str] = []
+        for key, value in self.environ.items():
+            environ_arg_args.extend(["--env", f"{key}={value}"])
 
         docker_command: list[str] = [
             self.docker_executable,
