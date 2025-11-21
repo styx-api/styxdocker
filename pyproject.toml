@@ -1,6 +1,6 @@
 [project]
 name = "styxdocker"
-version = "0.6.1"
+version = "0.6.2"
 description = "Docker integration for Styx compiled wrappers."
 authors = [
   {name = "Florian Rupprecht", email = "33600480+nx10@users.noreply.github.com"}
@@ -16,7 +16,7 @@ dev = [
   "mypy>=1.17.1",
   "pre-commit>=4.3.0",
   "pytest-cov>=6.2.1",
-  "ruff>=0.12.12",
+  "ruff>=0.14.6",
   "deptry>=0.23.0"
 ]
 docs = ["pdoc>=15.0.0"]
