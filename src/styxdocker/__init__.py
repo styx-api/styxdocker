@@ -91,12 +91,28 @@ class _DockerExecution(Execution):
         _host_file = pl.Path(host_file)
 
         if resolve_parent:
+            _host_file_parent = _host_file.parent
+            if not _host_file_parent.is_dir():
+                # If Docker gets passed a file to mount which does not exist it will
+                # create a directory at this location.
+                # This odd behaviour can lead to cryptic error messages downstream so we
+                # make sure to catch this early.
+                raise FileNotFoundError(
+                    f'Input folder not found: "{_host_file_parent}"'
+                )
+
             local_file = (
-                f"/styx_input/{self.input_file_next_id}/{_host_file.parent.name}"
+                f"/styx_input/{self.input_file_next_id}/{_host_file_parent.name}"
             )
             resolved_file = f"{local_file}/{_host_file.name}"
-            self.input_mounts.append((_host_file.parent, local_file, mutable))
+            self.input_mounts.append((_host_file_parent, local_file, mutable))
         else:
+            if not _host_file.exists():
+                # See note above.
+                # We don't know if the 'file' here is a directory or file
+                # so we can't additionally assert that it is.
+                raise FileNotFoundError(f'Input file not found: "{_host_file}"')
+
             resolved_file = local_file = (
                 f"/styx_input/{self.input_file_next_id}/{_host_file.name}"
             )
