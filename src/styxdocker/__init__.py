@@ -172,6 +172,8 @@ class _DockerExecution(Execution):
             "run",
             *self.docker_extra_args,
             "--rm",
+            "--name",
+            f"styx_{self.output_dir.name}",
             *(
                 ["-u", str(self.docker_user_id)]
                 if self.docker_user_id is not None
