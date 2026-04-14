@@ -1,3 +1,13 @@
+> [!IMPORTANT]
+> **This repository has moved.**
+> `styxdocker` (the Docker runner) is now developed in the
+> [**styx-runtime-py**](https://github.com/styx-api/styx-runtime-py) monorepo,
+> alongside the other Styx Python runtime packages.
+> New issues and pull requests should be filed there.
+> The PyPI package `styxdocker` continues to be published from the new location.
+
+---
+
 # Docker Runner for Styx compiled wrappers
 
 [![Build](https://github.com/styx-api/styxdocker/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/styx-api/styxdocker/actions/workflows/test.yaml?query=branch%3Amain)
